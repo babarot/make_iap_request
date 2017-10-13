@@ -1,4 +1,6 @@
-# [START iap_make_request]
+# This script is heavily inspired by
+# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/iap/make_iap_request.py
+
 import google.auth
 import google.auth.app_engine
 import google.auth.compute_engine.credentials
@@ -10,15 +12,7 @@ import requests
 import requests_toolbelt.adapters.appengine
 import sys
 
-# The hostname of an application protected by Identity-Aware Proxy.
-# When a request is made to https://${JWT_REFLECT_HOSTNAME}/, the
-# application should respond with the value of the
-# X-Goog-Authenticated-User-JWT (and nothing else.) The
-# app_engine_app/ subdirectory contains an App Engine standard
-# environment app that does this.
-# The project must have the service account used by this test added as a
-# member of the project.
-
+# Please rewrite these values to yours
 REFLECT_SERVICE_HOSTNAME = 'myserver.example.com'
 IAP_CLIENT_ID = '657424576728-3t5uiqg5ktqj5hqk3j45btq5uq98faos.apps.googleusercontent.com'
 IAP_APP_ID = 'gcp-project'
@@ -39,27 +33,11 @@ def make_iap_request(url, client_id):
     signer_email = bootstrap_credentials.service_account_email
     if isinstance(bootstrap_credentials,
                   google.auth.compute_engine.credentials.Credentials):
-        # Since the Compute Engine metadata service doesn't expose the service
-        # account key, we use the IAM signBlob API to sign instead.
-        # In order for this to work:
-        #
-        # 1. Your VM needs the https://www.googleapis.com/auth/iam scope.
-        #    You can specify this specific scope when creating a VM
-        #    through the API or gcloud. When using Cloud Console,
-        #    you'll need to specify the "full access to all Cloud APIs"
-        #    scope. A VM's scopes can only be specified at creation time.
-        #
-        # 2. The VM's default service account needs the "Service Account Actor"
-        #    role. This can be found under the "Project" category in Cloud
-        #    Console, or roles/iam.serviceAccountActor in gcloud.
         signer = google.auth.iam.Signer(
             Request(), bootstrap_credentials, signer_email)
     else:
-        # A Signer object can sign a JWT using the service account's key.
         signer = bootstrap_credentials.signer
 
-    # Construct OAuth 2.0 service account credentials using the signer
-    # and email acquired from the bootstrap credentials.
     service_account_credentials = google.oauth2.service_account.Credentials(
         signer, signer_email, token_uri=OAUTH_TOKEN_URI, additional_claims={
             'target_audience': client_id

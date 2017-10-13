@@ -63,6 +63,7 @@ function make_iap_request($url, $clientId, $pathToServiceAccount)
     return (string) $response->getBody();
 }
 
+# Please rewrite these values to yours
 $res = make_iap_request(
     'https://myserver.example.com',
     '657424576728-3t5uiqg5ktqj5hqk3j45btq5uq98faos.apps.googleusercontent.com',
