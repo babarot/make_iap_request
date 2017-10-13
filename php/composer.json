@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/auth": "dev-additional-claims as v1.0.1",
+        "google/auth": "^1.1",
         "google/apiclient": "^2.0"
     }
 }

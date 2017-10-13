@@ -20,8 +20,8 @@ For more info, please see also <https://cloud.google.com/iap/?hl=en>
 
 For each usage, please read README in each directory.
 
-- [php](./php/README.md)
-- [python](./python/README.md)
+- [php](./php)
+- [python](./python)
 
 ## License
 
